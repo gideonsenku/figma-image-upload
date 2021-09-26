@@ -30,7 +30,7 @@ const figmaImageUpload = () => {
           constraint: getConstraintByScale(scale)
         })
       })).then(u8List => {
-        const blob = new Blob([u8List], {
+        const blob = new Blob([...u8List], {
           type: 'image/png'
         })
         const data = new FormData()

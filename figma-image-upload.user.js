@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.1.1
+// @version     0.1.2
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -347,7 +347,7 @@
                     format: "PNG",
                     constraint: getConstraintByScale(scale)
                 })))).then((u8List => {
-                    const blob = new Blob([ u8List ], {
+                    const blob = new Blob([ ...u8List ], {
                         type: "image/png"
                     }), data = new FormData;
                     data.append("file", blob, (new Date).getTime() + ".png");
