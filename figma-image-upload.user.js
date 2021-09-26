@@ -10,7 +10,7 @@
 // @updateURL   https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @downloadURL https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @match       *://www.figma.com/file/*
-// @match       https://lbb00.github.io/figma-css-better/setting
+// @match       https://nocoding.xyz/figma-image-upload/setting
 // @run-at      document-start
 // @icon        https://www.google.com/s2/favicons?domain=figma.com
 // @license     MIT; https://github.com/gideonsenku/figma-image-upload/blob/main/LICENSE
@@ -410,7 +410,7 @@
             }), 500);
         }();
     };
-    /^https:\/\/lbb00.github.io\/figma-css-better\/setting/.test(window.location.href) && (window.onload = () => {
+    /^https:\/\/nocoding\.xyz\/figma-image-upload\/setting/.test(window.location.href) && (window.onload = () => {
         const mainEl = document.querySelector("main");
         new SettingPanel({
             target: mainEl

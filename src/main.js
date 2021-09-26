@@ -182,7 +182,7 @@ const figmaImageUpload = () => {
 
 const checkSetting = () => {
   if (
-    /^https:\/\/gideonsenku.github.io\/figma-image-upload\/setting/.test(
+    /^https:\/\/nocoding\.xyz\/figma-image-upload\/setting/.test(
       window.location.href
     )
   ) {

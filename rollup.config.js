@@ -57,7 +57,7 @@ module.exports = {
           'https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js'
         ],
         ['match', '*://www.figma.com/file/*'],
-        ['match', 'https://gideonsenku.github.io/figma-image-upload/setting'],
+        ['match', 'https://nocoding.xyz/figma-image-upload/setting'],
         ['run-at', 'document-start'],
         ['icon', 'https://www.google.com/s2/favicons?domain=figma.com'],
         [
