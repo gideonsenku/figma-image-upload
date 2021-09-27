@@ -36,16 +36,20 @@ const figmaImageUpload = () => {
         const data = new FormData()
         data.append('file', blob, new Date().getTime() + '.png')
         const url = GM_getValue(UPLOAD_URL_KEY, '')
-        return new Promise((resolve, reject) => {
-          GM_xmlhttpRequest({
-            url,
-            method: 'POST',
-            data,
-            onload (xhr) {
-              resolve(JSON.parse(xhr.responseText).url)
-            }
+        if (url) {
+          return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+              url,
+              method: 'POST',
+              data,
+              onload (xhr) {
+                resolve(JSON.parse(xhr.responseText).url)
+              }
+            })
           })
-        })
+        } else {
+          window.open('https://nocoding.xyz/figma-image-upload/setting.html')
+        }
       }).then((url) => {
         copyContent(url)
         figma.notify('图片上传成功，以复制到剪切板')

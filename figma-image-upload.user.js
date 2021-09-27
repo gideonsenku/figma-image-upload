@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.1.2
+// @version     0.1.3
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
-// @homepage    https://github.com/gideon sen ku/figma-image-upload
+// @homepage    https://github.com/gideonsenku/figma-image-upload
 // @supportURL  https://github.com/gideonsenku/figma-image-upload/issues
 // @updateURL   https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @downloadURL https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
@@ -352,7 +352,7 @@
                     }), data = new FormData;
                     data.append("file", blob, (new Date).getTime() + ".png");
                     const url = GM_getValue("UPLOAD_URL", "");
-                    return new Promise(((resolve, reject) => {
+                    if (url) return new Promise(((resolve, reject) => {
                         GM_xmlhttpRequest({
                             url: url,
                             method: "POST",
@@ -362,6 +362,7 @@
                             }
                         });
                     }));
+                    window.open("https://nocoding.xyz/figma-image-upload/setting.html");
                 })).then((url => {
                     !function copyContent(text) {
                         if (void 0 === navigator.clipboard) {
