@@ -60,7 +60,7 @@ const figmaImageUpload = () => {
 
   // 监听export 面板点击监听
   function addExportTabEventListener () {
-    const node = document.querySelectorAll('[data-label=export]')[0]
+    const node = document.querySelector('[data-label=export i]')
     if (node) {
       node.addEventListener('click', function () {
         setTimeout(() => {
