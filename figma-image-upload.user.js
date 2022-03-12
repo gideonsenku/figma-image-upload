@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.1.3
+// @version     0.1.4
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -11,7 +11,7 @@
 // @downloadURL https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @match       *://www.figma.com/file/*
 // @match       https://nocoding.xyz/figma-image-upload/setting.html
-// @run-at      document-start
+// @run-at      document-end
 // @icon        https://www.google.com/s2/favicons?domain=figma.com
 // @license     MIT; https://github.com/gideonsenku/figma-image-upload/blob/main/LICENSE
 // @grant       unsafeWindow
@@ -73,26 +73,24 @@
     function add_render_callback(fn) {
         render_callbacks.push(fn);
     }
-    let flushing = !1;
     const seen_callbacks = new Set;
+    let flushidx = 0;
     function flush() {
-        if (!flushing) {
-            flushing = !0;
-            do {
-                for (let i = 0; i < dirty_components.length; i += 1) {
-                    const component = dirty_components[i];
-                    set_current_component(component), update(component.$$);
-                }
-                for (set_current_component(null), dirty_components.length = 0; binding_callbacks.length; ) binding_callbacks.pop()();
-                for (let i = 0; i < render_callbacks.length; i += 1) {
-                    const callback = render_callbacks[i];
-                    seen_callbacks.has(callback) || (seen_callbacks.add(callback), callback());
-                }
-                render_callbacks.length = 0;
-            } while (dirty_components.length);
-            for (;flush_callbacks.length; ) flush_callbacks.pop()();
-            update_scheduled = !1, flushing = !1, seen_callbacks.clear();
-        }
+        const saved_component = current_component;
+        do {
+            for (;flushidx < dirty_components.length; ) {
+                const component = dirty_components[flushidx];
+                flushidx++, set_current_component(component), update(component.$$);
+            }
+            for (set_current_component(null), dirty_components.length = 0, flushidx = 0; binding_callbacks.length; ) binding_callbacks.pop()();
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                seen_callbacks.has(callback) || (seen_callbacks.add(callback), callback());
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        for (;flush_callbacks.length; ) flush_callbacks.pop()();
+        update_scheduled = !1, seen_callbacks.clear(), set_current_component(saved_component);
     }
     function update($$) {
         if (null !== $$.fragment) {
@@ -122,7 +120,7 @@
             on_disconnect: [],
             before_update: [],
             after_update: [],
-            context: new Map(parent_component ? parent_component.$$.context : options.context || []),
+            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
             callbacks: blank_object(),
             dirty: dirty,
             skip_bound: !1,
@@ -175,6 +173,16 @@
             }($$props) && (this.$$.skip_bound = !0, this.$$set($$props), this.$$.skip_bound = !1);
         }
     }
+    var UseSingleton = function(createInstance, {withKey: withKey = !1, immediate: immediate = !1} = {}) {
+        const UNDEFINED_INSTANCE = {};
+        let _key, _instance = UNDEFINED_INSTANCE;
+        function getSingleton(key) {
+            return _instance !== UNDEFINED_INSTANCE && function checkSameKey(key) {
+                return !withKey || void 0 === key || key === _key;
+            }(key) || (_key = key, _instance = createInstance(_key)), _instance;
+        }
+        return immediate && getSingleton(), getSingleton;
+    };
     function create_fragment$1(ctx) {
         let div, t, div_class_value;
         return {
@@ -217,7 +225,7 @@
             style.type = "text/css", "top" === insertAt && head.firstChild ? head.insertBefore(style, head.firstChild) : head.appendChild(style), 
             style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css));
         }
-    }(".toast.svelte-1hd7ahf{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:4px;background-color:rgba(0,0,0,.8);padding:12px 24px;max-width:200px;color:#eee;font-size:16px;z-index:9999999}.toast--hide.svelte-1hd7ahf{z-index:-1;visibility:hidden}");
+    }(".toast.svelte-1hd7ahf{background-color:rgba(0,0,0,.8);border-radius:4px;color:#eee;font-size:16px;left:50%;max-width:200px;padding:12px 24px;position:fixed;top:50%;transform:translate(-50%,-50%);z-index:9999999}.toast--hide.svelte-1hd7ahf{visibility:hidden;z-index:-1}");
     class Toast extends SvelteComponent {
         constructor(options) {
             super(), init(this, options, instance$1, create_fragment$1, safe_not_equal, {
@@ -228,16 +236,7 @@
             return this.$$.ctx[3];
         }
     }
-    const toast = function(createInstance, {withKey: withKey = !1, immediate: immediate = !1} = {}) {
-        const UNDEFINED_INSTANCE = {};
-        let _key, _instance = UNDEFINED_INSTANCE;
-        function getSingleton(key) {
-            return _instance !== UNDEFINED_INSTANCE && function checkSameKey(key) {
-                return !withKey || void 0 === key || key === _key;
-            }(key) || (_key = key, _instance = createInstance(_key)), _instance;
-        }
-        return immediate && getSingleton(), getSingleton;
-    }((() => {
+    const toast = UseSingleton((() => {
         const toastEl = new Toast({
             target: document.body,
             props: {
@@ -258,7 +257,7 @@
                 div3 = element("div"), div2 = element("div"), div0 = element("div"), div0.textContent = "配置url地址", 
                 t1 = space(), div1 = element("div"), input = element("input"), t2 = space(), button = element("button"), 
                 button.textContent = "保存", attr(div0, "class", "text-blue-800 font-medium mb-3"), 
-                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none\n      focus:outline-none w-full"), 
+                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none focus:outline-none w-full"), 
                 attr(div1, "class", "mb-3 pt-0"), attr(button, "class", "bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-base px-8 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"), 
                 attr(button, "type", "button");
             },
@@ -395,7 +394,7 @@
                 }));
             }
         })), base64BtnWrapper.appendChild(base64Btn), function addExportTabEventListener() {
-            const node = document.querySelectorAll("[data-label=export]")[0];
+            const node = document.querySelector("[data-label=export i]");
             node ? node.addEventListener("click", (function() {
                 setTimeout((() => {
                     insertBase64Btn(), function addAddBtnEventListener() {
