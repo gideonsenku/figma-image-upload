@@ -42,7 +42,7 @@ module.exports = {
       const items = [
         ['name', 'Figma Image Upload'],
         ['namespace', 'https://github.com/gideonsenku'],
-        ['version', '0.1.3'],
+        ['version', '0.1.4'],
         ['description', 'Figma Image Upload图片上传工具'],
         ['encoding', 'utf-8'],
         ['author', 'gideonsenku'],
@@ -58,7 +58,7 @@ module.exports = {
         ],
         ['match', '*://www.figma.com/file/*'],
         ['match', 'https://nocoding.xyz/figma-image-upload/setting.html'],
-        ['run-at', 'document-start'],
+        ['run-at', 'document-end'],
         ['icon', 'https://www.google.com/s2/favicons?domain=figma.com'],
         [
           'license',
