@@ -1,17 +1,17 @@
 <script>
-  import { toast } from "../Toast/index";
-  import { UPLOAD_URL_KEY } from "../../constants/storageKey";
-  let uploadUrl = GM_getValue(UPLOAD_URL_KEY, "");
+  import { toast } from '../Toast/index'
+  import { UPLOAD_URL_KEY } from '../../constants/storageKey'
+  let uploadUrl = GM_getValue(UPLOAD_URL_KEY, '')
   function save() {
     try {
-      GM_setValue(UPLOAD_URL_KEY, uploadUrl);
+      GM_setValue(UPLOAD_URL_KEY, uploadUrl)
       toast({
-        title: "保存成功",
-      });
+        title: '保存成功',
+      })
     } catch (e) {
       toast({
         title: e.message,
-      });
+      })
     }
   }
 </script>

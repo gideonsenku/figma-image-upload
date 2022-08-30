@@ -16,7 +16,9 @@
   }
 </script>
 
-<div class="toast {visiable ? '' : 'toast--hide'}" bind:this={toast}>{content}</div>
+<div class="toast {visiable ? '' : 'toast--hide'}" bind:this={toast}>
+  {content}
+</div>
 
 <style>
   .toast {

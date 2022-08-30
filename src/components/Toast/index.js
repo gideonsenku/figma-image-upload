@@ -5,13 +5,13 @@ import Toast from './toast.svelte'
 const ToastInstance = UseSingleton(() => {
   const toastEl = new Toast({
     target: document.body,
-    props: { content: '' }
+    props: { content: '' },
   })
 
   return ({ title, duration = 1500 }) => {
     toastEl.show({
       title,
-      duration
+      duration,
     })
   }
 })
