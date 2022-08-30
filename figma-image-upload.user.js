@@ -61,6 +61,9 @@
     function attr(node, attribute, value) {
         null == value ? node.removeAttribute(attribute) : node.getAttribute(attribute) !== value && node.setAttribute(attribute, value);
     }
+    function set_data(text, data) {
+        data = "" + data, text.wholeText !== data && (text.data = data);
+    }
     function set_input_value(input, value) {
         input.value = null == value ? "" : value;
     }
@@ -183,7 +186,16 @@
         }
         return immediate && getSingleton(), getSingleton;
     };
-    function create_fragment$1(ctx) {
+    function styleInject(css, ref) {
+        void 0 === ref && (ref = {});
+        var insertAt = ref.insertAt;
+        if (css && "undefined" != typeof document) {
+            var head = document.head || document.getElementsByTagName("head")[0], style = document.createElement("style");
+            style.type = "text/css", "top" === insertAt && head.firstChild ? head.insertBefore(style, head.firstChild) : head.appendChild(style), 
+            style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css));
+        }
+    }
+    function create_fragment$2(ctx) {
         let div, t, div_class_value;
         return {
             c() {
@@ -193,9 +205,7 @@
                 insert(target, div, anchor), append(div, t), ctx[4](div);
             },
             p(ctx, [dirty]) {
-                4 & dirty && function set_data(text, data) {
-                    data = "" + data, text.wholeText !== data && (text.data = data);
-                }(t, ctx[2]), 2 & dirty && div_class_value !== (div_class_value = "toast " + (ctx[1] ? "" : "toast--hide") + " svelte-1hd7ahf") && attr(div, "class", div_class_value);
+                4 & dirty && set_data(t, ctx[2]), 2 & dirty && div_class_value !== (div_class_value = "toast " + (ctx[1] ? "" : "toast--hide") + " svelte-1hd7ahf") && attr(div, "class", div_class_value);
             },
             i: noop,
             o: noop,
@@ -204,7 +214,7 @@
             }
         };
     }
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance$2($$self, $$props, $$invalidate) {
         let toast, content, visiable = !1, closeTimer = null;
         return [ toast, visiable, content, function show({title: title, duration: duration = 1500}) {
             $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0), 
@@ -217,18 +227,10 @@
             }));
         } ];
     }
-    !function styleInject(css, ref) {
-        void 0 === ref && (ref = {});
-        var insertAt = ref.insertAt;
-        if (css && "undefined" != typeof document) {
-            var head = document.head || document.getElementsByTagName("head")[0], style = document.createElement("style");
-            style.type = "text/css", "top" === insertAt && head.firstChild ? head.insertBefore(style, head.firstChild) : head.appendChild(style), 
-            style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css));
-        }
-    }(".toast.svelte-1hd7ahf{background-color:rgba(0,0,0,.8);border-radius:4px;color:#eee;font-size:16px;left:50%;max-width:200px;padding:12px 24px;position:fixed;top:50%;transform:translate(-50%,-50%);z-index:9999999}.toast--hide.svelte-1hd7ahf{visibility:hidden;z-index:-1}");
+    styleInject(".toast.svelte-1hd7ahf{background-color:rgba(0,0,0,.8);border-radius:4px;color:#eee;font-size:16px;left:50%;max-width:200px;padding:12px 24px;position:fixed;top:50%;transform:translate(-50%,-50%);z-index:9999999}.toast--hide.svelte-1hd7ahf{visibility:hidden;z-index:-1}");
     class Toast extends SvelteComponent {
         constructor(options) {
-            super(), init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+            super(), init(this, options, instance$2, create_fragment$2, safe_not_equal, {
                 show: 3
             });
         }
@@ -250,7 +252,7 @@
             });
         };
     }))();
-    function create_fragment(ctx) {
+    function create_fragment$1(ctx) {
         let div3, div2, div0, t1, div1, input, t2, button, mounted, dispose;
         return {
             c() {
@@ -277,7 +279,7 @@
             }
         };
     }
-    function instance($$self, $$props, $$invalidate) {
+    function instance$1($$self, $$props, $$invalidate) {
         let uploadUrl = GM_getValue("UPLOAD_URL", "");
         return [ uploadUrl, function save() {
             try {
@@ -295,105 +297,132 @@
     }
     class SettingPanel extends SvelteComponent {
         constructor(options) {
-            super(), init(this, options, instance, create_fragment, safe_not_equal, {});
+            super(), init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
         }
     }
+    function create_if_block(ctx) {
+        let div7, div6, t5, if_block = ctx[2] && create_if_block_1(ctx);
+        return {
+            c() {
+                div7 = element("div"), div6 = element("div"), div6.innerHTML = '<div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div>', 
+                t5 = space(), if_block && if_block.c(), attr(div6, "class", "sk-chase svelte-julqje"), 
+                attr(div7, "class", "loading-bg svelte-julqje");
+            },
+            m(target, anchor) {
+                insert(target, div7, anchor), append(div7, div6), append(div7, t5), if_block && if_block.m(div7, null), 
+                ctx[5](div7);
+            },
+            p(ctx, dirty) {
+                ctx[2] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block_1(ctx), 
+                if_block.c(), if_block.m(div7, null)) : if_block && (if_block.d(1), if_block = null);
+            },
+            d(detaching) {
+                detaching && detach(div7), if_block && if_block.d(), ctx[5](null);
+            }
+        };
+    }
+    function create_if_block_1(ctx) {
+        let div, t;
+        return {
+            c() {
+                div = element("div"), t = text(ctx[2]), attr(div, "class", "loading-content svelte-julqje");
+            },
+            m(target, anchor) {
+                insert(target, div, anchor), append(div, t);
+            },
+            p(ctx, dirty) {
+                4 & dirty && set_data(t, ctx[2]);
+            },
+            d(detaching) {
+                detaching && detach(div);
+            }
+        };
+    }
+    function create_fragment(ctx) {
+        let if_block_anchor, if_block = ctx[1] && create_if_block(ctx);
+        return {
+            c() {
+                if_block && if_block.c(), if_block_anchor = function empty() {
+                    return text("");
+                }();
+            },
+            m(target, anchor) {
+                if_block && if_block.m(target, anchor), insert(target, if_block_anchor, anchor);
+            },
+            p(ctx, [dirty]) {
+                ctx[1] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block(ctx), if_block.c(), 
+                if_block.m(if_block_anchor.parentNode, if_block_anchor)) : if_block && (if_block.d(1), 
+                if_block = null);
+            },
+            i: noop,
+            o: noop,
+            d(detaching) {
+                if_block && if_block.d(detaching), detaching && detach(if_block_anchor);
+            }
+        };
+    }
+    function instance($$self, $$props, $$invalidate) {
+        let loading, content, visiable = !1, closeTimer = null;
+        return [ loading, visiable, content, function show({title: title, duration: duration = 0}) {
+            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0), 
+            0 != duration && (closeTimer = setTimeout((() => {
+                $$invalidate(1, visiable = !1), closeTimer = null;
+            }), duration));
+        }, function close() {
+            closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !1);
+        }, function div7_binding($$value) {
+            binding_callbacks[$$value ? "unshift" : "push"]((() => {
+                loading = $$value, $$invalidate(0, loading);
+            }));
+        } ];
+    }
+    styleInject('.loading-bg.svelte-julqje{align-items:center;background:rgba(0,0,0,.6);bottom:0;display:flex;flex-direction:column;justify-content:center;left:0;position:fixed;right:0;top:0;z-index:99999}.loading-content.svelte-julqje{color:#fff;font-size:16px;margin-top:10px}.sk-chase.svelte-julqje{animation:svelte-julqje-sk-chase 2.5s linear infinite both;height:40px;width:40px}.sk-chase-dot.svelte-julqje{animation:svelte-julqje-sk-chase-dot 2s ease-in-out infinite both;height:100%;left:0;position:absolute;top:0;width:100%}.sk-chase-dot.svelte-julqje:before{animation:svelte-julqje-sk-chase-dot-before 2s ease-in-out infinite both;background-color:#fff;border-radius:100%;content:"";display:block;height:25%;width:25%}.sk-chase-dot.svelte-julqje:first-child{animation-delay:-1.1s}.sk-chase-dot.svelte-julqje:nth-child(2){animation-delay:-1s}.sk-chase-dot.svelte-julqje:nth-child(3){animation-delay:-.9s}.sk-chase-dot.svelte-julqje:nth-child(4){animation-delay:-.8s}.sk-chase-dot.svelte-julqje:nth-child(5){animation-delay:-.7s}.sk-chase-dot.svelte-julqje:nth-child(6){animation-delay:-.6s}.sk-chase-dot.svelte-julqje:first-child:before{animation-delay:-1.1s}.sk-chase-dot.svelte-julqje:nth-child(2):before{animation-delay:-1s}.sk-chase-dot.svelte-julqje:nth-child(3):before{animation-delay:-.9s}.sk-chase-dot.svelte-julqje:nth-child(4):before{animation-delay:-.8s}.sk-chase-dot.svelte-julqje:nth-child(5):before{animation-delay:-.7s}.sk-chase-dot.svelte-julqje:nth-child(6):before{animation-delay:-.6s}@keyframes svelte-julqje-sk-chase{to{transform:rotate(1turn)}}@keyframes svelte-julqje-sk-chase-dot{80%,to{transform:rotate(1turn)}}@keyframes svelte-julqje-sk-chase-dot-before{50%{transform:scale(.4)}0%,to{transform:scale(1)}}');
+    class Loading extends SvelteComponent {
+        constructor(options) {
+            super(), init(this, options, instance, create_fragment, safe_not_equal, {
+                show: 3,
+                close: 4
+            });
+        }
+        get show() {
+            return this.$$.ctx[3];
+        }
+        get close() {
+            return this.$$.ctx[4];
+        }
+    }
+    const loading = UseSingleton((() => {
+        const loadingEl = new Loading({
+            target: document.body,
+            props: {
+                content: ""
+            }
+        });
+        return {
+            show({title: title, duration: duration = 0}) {
+                loadingEl.show({
+                    title: title,
+                    duration: duration
+                });
+            },
+            close() {
+                loadingEl.close();
+            }
+        };
+    }))();
     const figmaImageUpload = () => {
         if (!/^https:\/\/www\.figma.com/.test(window.location.href)) return;
         const base64BtnWrapper = document.createElement("div"), base64Btn = document.createElement("button");
         function insertBase64Btn() {
-            const exportBtn = document.querySelectorAll("button[class*=export_panel--exportButton]")[0];
+            let exportBtn = null;
+            const btns = document.querySelectorAll("[class*=export_panel--standalonePanel] button");
+            for (let btn of btns) "Export" === btn.querySelector("span")?.innerText && (exportBtn = btn);
             exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")), 
             !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")), 
             exportBtn.parentElement.parentElement.insertBefore(base64BtnWrapper, exportBtn.parentElement.nextSibling));
         }
-        function getConstraintByScale(scale) {
-            return "0.5x" === scale ? {
-                type: "SCALE",
-                value: .5
-            } : "0.75x" === scale ? {
-                type: "SCALE",
-                value: .75
-            } : "1x" === scale ? {
-                type: "SCALE",
-                value: 1
-            } : "1.5x" === scale ? {
-                type: "SCALE",
-                value: 1.5
-            } : "2x" === scale ? {
-                type: "SCALE",
-                value: 2
-            } : "3x" === scale ? {
-                type: "SCALE",
-                value: 3
-            } : "4x" === scale ? {
-                type: "SCALE",
-                value: 4
-            } : "512w" === scale ? {
-                type: "WIDTH",
-                value: 512
-            } : "512h" === scale ? {
-                type: "HEIGHT",
-                value: 512
-            } : void 0;
-        }
-        base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", (function() {
-            const scaleInputs = Array.apply(null, document.querySelectorAll('input[spellcheck="false"][autocomplete="new-password"][class^=raw_components--textInput]')), scales = Array.from(new Set(scaleInputs.map((ele => ele.value))));
-            if (scales.length) {
-                const {selection: selection} = figma.currentPage;
-                if (!selection[0]) return void alert("请选择要处理的节点");
-                Promise.all(scales.map((scale => selection[0].exportAsync({
-                    format: "PNG",
-                    constraint: getConstraintByScale(scale)
-                })))).then((u8List => {
-                    const blob = new Blob([ ...u8List ], {
-                        type: "image/png"
-                    }), data = new FormData;
-                    data.append("file", blob, (new Date).getTime() + ".png");
-                    const url = GM_getValue("UPLOAD_URL", "");
-                    if (url) return new Promise(((resolve, reject) => {
-                        GM_xmlhttpRequest({
-                            url: url,
-                            method: "POST",
-                            data: data,
-                            onload(xhr) {
-                                resolve(JSON.parse(xhr.responseText).url);
-                            }
-                        });
-                    }));
-                    window.open("https://nocoding.xyz/figma-image-upload/setting.html");
-                })).then((url => {
-                    !function copyContent(text) {
-                        if (void 0 === navigator.clipboard) {
-                            const textarea = window.document.querySelector("#copy-area");
-                            textarea.value = text, textarea.focus(), textarea.select();
-                            return void (window.document.execCommand("copy") ? parent.postMessage({
-                                pluginMessage: {
-                                    type: "success"
-                                }
-                            }, "*") : parent.postMessage({
-                                pluginMessage: {
-                                    type: "fail"
-                                }
-                            }, "*"));
-                        }
-                        navigator.clipboard.writeText(text).then((function() {
-                            parent.postMessage({
-                                pluginMessage: {
-                                    type: "success"
-                                }
-                            }, "*");
-                        }), (function(_err) {
-                            parent.postMessage({
-                                pluginMessage: {
-                                    type: "fail"
-                                }
-                            }, "*");
-                        }));
-                    }(url), figma.notify("图片上传成功，以复制到剪切板");
-                }));
-            }
-        })), base64BtnWrapper.appendChild(base64Btn), function addExportTabEventListener() {
+        base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", exportAndupload), 
+        base64BtnWrapper.appendChild(base64Btn), function addExportTabEventListener() {
             const node = document.querySelector("[data-label=export i]");
             node ? node.addEventListener("click", (function() {
                 setTimeout((() => {
@@ -410,6 +439,103 @@
             }), 500);
         }();
     };
+    function getConstraintByScale(scale) {
+        return "0.5x" === scale ? {
+            type: "SCALE",
+            value: .5
+        } : "0.75x" === scale ? {
+            type: "SCALE",
+            value: .75
+        } : "1x" === scale ? {
+            type: "SCALE",
+            value: 1
+        } : "1.5x" === scale ? {
+            type: "SCALE",
+            value: 1.5
+        } : "2x" === scale ? {
+            type: "SCALE",
+            value: 2
+        } : "3x" === scale ? {
+            type: "SCALE",
+            value: 3
+        } : "4x" === scale ? {
+            type: "SCALE",
+            value: 4
+        } : "512w" === scale ? {
+            type: "WIDTH",
+            value: 512
+        } : "512h" === scale ? {
+            type: "HEIGHT",
+            value: 512
+        } : void 0;
+    }
+    async function exportAndupload() {
+        const scaleInputs = Array.apply(null, document.querySelectorAll('input[spellcheck="false"][autocomplete="new-password"][class^=raw_components--textInput]')), scales = Array.from(new Set(scaleInputs.map((ele => ele.value))));
+        if (scales.length) {
+            const {selection: selection} = figma.currentPage;
+            if (!selection[0]) return void alert("请选择要处理的节点");
+            try {
+                loading.show({
+                    title: "图片上传中"
+                });
+                const scale = scales[0], u8List = await selection[0].exportAsync({
+                    format: "PNG",
+                    constraint: getConstraintByScale(scale)
+                }), blob = new Blob([ ...u8List ], {
+                    type: "image/png"
+                }), data = new FormData;
+                data.append("file", blob, (new Date).getTime() + ".png");
+                const uploadUrl = GM_getValue("UPLOAD_URL", "");
+                if (!uploadUrl) return void window.open("https://nocoding.xyz/figma-image-upload/setting.html");
+                !function copyContent(text) {
+                    if (void 0 !== navigator.clipboard) navigator.clipboard.writeText(text).then((function() {
+                        parent.postMessage({
+                            pluginMessage: {
+                                type: "success"
+                            }
+                        }, "*");
+                    }), (function(_err) {
+                        parent.postMessage({
+                            pluginMessage: {
+                                type: "fail"
+                            }
+                        }, "*");
+                    })); else {
+                        const textarea = window.document.querySelector("#copy-area");
+                        textarea.value = text, textarea.focus(), textarea.select(), window.document.execCommand("copy") ? parent.postMessage({
+                            pluginMessage: {
+                                type: "success"
+                            }
+                        }, "*") : parent.postMessage({
+                            pluginMessage: {
+                                type: "fail"
+                            }
+                        }, "*");
+                    }
+                }(await new Promise(((resolve, reject) => {
+                    GM_xmlhttpRequest({
+                        url: uploadUrl,
+                        method: "POST",
+                        data: data,
+                        onload(xhr) {
+                            if (200 == +xhr.status) try {
+                                const url = JSON.parse(xhr.responseText).url;
+                                if (!url) return void reject("服务端没有返回url");
+                                resolve(url);
+                            } catch (e) {
+                                reject(e);
+                            } else reject(`请求stauts ${xhr.status}`);
+                        },
+                        onerror(e) {
+                            reject(e);
+                        }
+                    });
+                }))), loading.close(), figma.notify("【图片上传成功】已复制到剪切板");
+            } catch (e) {
+                loading.close(), figma.notify("【图片上传失败】" + ("string" == typeof e ? e : JSON.stringify(e)));
+            }
+        }
+    }
     /^https:\/\/nocoding\.xyz\/figma-image-upload\/setting/.test(window.location.href) && (window.onload = () => {
         const mainEl = document.querySelector("main");
         new SettingPanel({
