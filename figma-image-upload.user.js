@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.1.5
+// @version     0.1.6
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -10,7 +10,7 @@
 // @updateURL   https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @downloadURL https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @match       *://www.figma.com/file/*
-// @match       https://nocoding.xyz/figma-image-upload/setting.html
+// @match       http://blog.sodion.net/figma-image-upload/setting.html
 // @run-at      document-end
 // @icon        https://www.google.com/s2/favicons?domain=figma.com
 // @license     MIT; https://github.com/gideonsenku/figma-image-upload/blob/main/LICENSE
