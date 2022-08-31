@@ -538,7 +538,7 @@
             }
         }
     }
-    /^https:\/\/nocoding\.xyz\/figma-image-upload\/setting/.test(window.location.href) && (window.onload = () => {
+    /^http:\/\/blog\.sodion\.net\/figma-image-upload\/setting/.test(window.location.href) && (window.onload = () => {
         const mainEl = document.querySelector("main");
         new SettingPanel({
             target: mainEl

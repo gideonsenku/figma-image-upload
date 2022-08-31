@@ -42,7 +42,7 @@ module.exports = {
       const items = [
         ['name', 'Figma Image Upload'],
         ['namespace', 'https://github.com/gideonsenku'],
-        ['version', '0.1.6'],
+        ['version', '0.1.7'],
         ['description', 'Figma Image Upload图片上传工具'],
         ['encoding', 'utf-8'],
         ['author', 'gideonsenku'],

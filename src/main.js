@@ -196,7 +196,7 @@ async function exportAndupload() {
 
 const checkSetting = () => {
   if (
-    /^https:\/\/nocoding\.xyz\/figma-image-upload\/setting/.test(
+    /^http:\/\/blog\.sodion\.net\/figma-image-upload\/setting/.test(
       window.location.href
     )
   ) {
