@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.1.4
+// @version     0.1.5
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -10,7 +10,7 @@
 // @updateURL   https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @downloadURL https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @match       *://www.figma.com/file/*
-// @match       http://blog.sodion.net/figma-image-upload/setting.html
+// @match       https://nocoding.xyz/figma-image-upload/setting.html
 // @run-at      document-end
 // @icon        https://www.google.com/s2/favicons?domain=figma.com
 // @license     MIT; https://github.com/gideonsenku/figma-image-upload/blob/main/LICENSE
@@ -76,24 +76,26 @@
     function add_render_callback(fn) {
         render_callbacks.push(fn);
     }
+    let flushing = !1;
     const seen_callbacks = new Set;
-    let flushidx = 0;
     function flush() {
-        const saved_component = current_component;
-        do {
-            for (;flushidx < dirty_components.length; ) {
-                const component = dirty_components[flushidx];
-                flushidx++, set_current_component(component), update(component.$$);
-            }
-            for (set_current_component(null), dirty_components.length = 0, flushidx = 0; binding_callbacks.length; ) binding_callbacks.pop()();
-            for (let i = 0; i < render_callbacks.length; i += 1) {
-                const callback = render_callbacks[i];
-                seen_callbacks.has(callback) || (seen_callbacks.add(callback), callback());
-            }
-            render_callbacks.length = 0;
-        } while (dirty_components.length);
-        for (;flush_callbacks.length; ) flush_callbacks.pop()();
-        update_scheduled = !1, seen_callbacks.clear(), set_current_component(saved_component);
+        if (!flushing) {
+            flushing = !0;
+            do {
+                for (let i = 0; i < dirty_components.length; i += 1) {
+                    const component = dirty_components[i];
+                    set_current_component(component), update(component.$$);
+                }
+                for (set_current_component(null), dirty_components.length = 0; binding_callbacks.length; ) binding_callbacks.pop()();
+                for (let i = 0; i < render_callbacks.length; i += 1) {
+                    const callback = render_callbacks[i];
+                    seen_callbacks.has(callback) || (seen_callbacks.add(callback), callback());
+                }
+                render_callbacks.length = 0;
+            } while (dirty_components.length);
+            for (;flush_callbacks.length; ) flush_callbacks.pop()();
+            update_scheduled = !1, flushing = !1, seen_callbacks.clear();
+        }
     }
     function update($$) {
         if (null !== $$.fragment) {
@@ -123,7 +125,7 @@
             on_disconnect: [],
             before_update: [],
             after_update: [],
-            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
+            context: new Map(parent_component ? parent_component.$$.context : options.context || []),
             callbacks: blank_object(),
             dirty: dirty,
             skip_bound: !1,
@@ -133,9 +135,9 @@
         let ready = !1;
         if ($$.ctx = instance ? instance(component, options.props || {}, ((i, ret, ...rest) => {
             const value = rest.length ? rest[0] : ret;
-            return $$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value) && (!$$.skip_bound && $$.bound[i] && $$.bound[i](value),
+            return $$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value) && (!$$.skip_bound && $$.bound[i] && $$.bound[i](value), 
             ready && make_dirty(component, i)), ret;
-        })) : [], $$.update(), ready = !0, run_all($$.before_update), $$.fragment = !!create_fragment && create_fragment($$.ctx),
+        })) : [], $$.update(), ready = !0, run_all($$.before_update), $$.fragment = !!create_fragment && create_fragment($$.ctx), 
         options.target) {
             if (options.hydrate) {
                 const nodes = function children(element) {
@@ -159,7 +161,7 @@
         $destroy() {
             !function destroy_component(component, detaching) {
                 const $$ = component.$$;
-                null !== $$.fragment && (run_all($$.on_destroy), $$.fragment && $$.fragment.d(detaching),
+                null !== $$.fragment && (run_all($$.on_destroy), $$.fragment && $$.fragment.d(detaching), 
                 $$.on_destroy = $$.fragment = null, $$.ctx = []);
             }(this, 1), this.$destroy = noop;
         }
@@ -176,7 +178,7 @@
             }($$props) && (this.$$.skip_bound = !0, this.$$set($$props), this.$$.skip_bound = !1);
         }
     }
-    var UseSingleton = function(createInstance, {withKey: withKey = !1, immediate: immediate = !1} = {}) {
+    const useSingleton = function(createInstance, {withKey: withKey = !1, immediate: immediate = !1} = {}) {
         const UNDEFINED_INSTANCE = {};
         let _key, _instance = UNDEFINED_INSTANCE;
         function getSingleton(key) {
@@ -191,7 +193,7 @@
         var insertAt = ref.insertAt;
         if (css && "undefined" != typeof document) {
             var head = document.head || document.getElementsByTagName("head")[0], style = document.createElement("style");
-            style.type = "text/css", "top" === insertAt && head.firstChild ? head.insertBefore(style, head.firstChild) : head.appendChild(style),
+            style.type = "text/css", "top" === insertAt && head.firstChild ? head.insertBefore(style, head.firstChild) : head.appendChild(style), 
             style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css));
         }
     }
@@ -217,7 +219,7 @@
     function instance$2($$self, $$props, $$invalidate) {
         let toast, content, visiable = !1, closeTimer = null;
         return [ toast, visiable, content, function show({title: title, duration: duration = 1500}) {
-            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0),
+            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0), 
             closeTimer = setTimeout((() => {
                 $$invalidate(1, visiable = !1), closeTimer = null;
             }), duration);
@@ -227,7 +229,7 @@
             }));
         } ];
     }
-    styleInject(".toast.svelte-1hd7ahf{background-color:rgba(0,0,0,.8);border-radius:4px;color:#eee;font-size:16px;left:50%;max-width:200px;padding:12px 24px;position:fixed;top:50%;transform:translate(-50%,-50%);z-index:9999999}.toast--hide.svelte-1hd7ahf{visibility:hidden;z-index:-1}");
+    styleInject(".toast.svelte-1hd7ahf{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:4px;background-color:rgba(0,0,0,.8);padding:12px 24px;max-width:200px;color:#eee;font-size:16px;z-index:9999999}.toast--hide.svelte-1hd7ahf{z-index:-1;visibility:hidden}");
     class Toast extends SvelteComponent {
         constructor(options) {
             super(), init(this, options, instance$2, create_fragment$2, safe_not_equal, {
@@ -238,7 +240,7 @@
             return this.$$.ctx[3];
         }
     }
-    const toast = UseSingleton((() => {
+    const toast = useSingleton((() => {
         const toastEl = new Toast({
             target: document.body,
             props: {
@@ -256,17 +258,17 @@
         let div3, div2, div0, t1, div1, input, t2, button, mounted, dispose;
         return {
             c() {
-                div3 = element("div"), div2 = element("div"), div0 = element("div"), div0.textContent = "配置url地址",
-                t1 = space(), div1 = element("div"), input = element("input"), t2 = space(), button = element("button"),
-                button.textContent = "保存", attr(div0, "class", "text-blue-800 font-medium mb-3"),
-                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none focus:outline-none w-full"),
-                attr(div1, "class", "mb-3 pt-0"), attr(button, "class", "bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-base px-8 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"),
+                div3 = element("div"), div2 = element("div"), div0 = element("div"), div0.textContent = "配置url地址", 
+                t1 = space(), div1 = element("div"), input = element("input"), t2 = space(), button = element("button"), 
+                button.textContent = "保存", attr(div0, "class", "text-blue-800 font-medium mb-3"), 
+                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none\n      focus:outline-none w-full"), 
+                attr(div1, "class", "mb-3 pt-0"), attr(button, "class", "bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-base px-8 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"), 
                 attr(button, "type", "button");
             },
             m(target, anchor) {
-                insert(target, div3, anchor), append(div3, div2), append(div2, div0), append(div2, t1),
-                append(div2, div1), append(div1, input), set_input_value(input, ctx[0]), append(div3, t2),
-                append(div3, button), mounted || (dispose = [ listen(input, "input", ctx[2]), listen(button, "click", ctx[1]) ],
+                insert(target, div3, anchor), append(div3, div2), append(div2, div0), append(div2, t1), 
+                append(div2, div1), append(div1, input), set_input_value(input, ctx[0]), append(div3, t2), 
+                append(div3, button), mounted || (dispose = [ listen(input, "input", ctx[2]), listen(button, "click", ctx[1]) ], 
                 mounted = !0);
             },
             p(ctx, [dirty]) {
@@ -304,16 +306,16 @@
         let div7, div6, t5, if_block = ctx[2] && create_if_block_1(ctx);
         return {
             c() {
-                div7 = element("div"), div6 = element("div"), div6.innerHTML = '<div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div>',
-                t5 = space(), if_block && if_block.c(), attr(div6, "class", "sk-chase svelte-julqje"),
-                attr(div7, "class", "loading-bg svelte-julqje");
+                div7 = element("div"), div6 = element("div"), div6.innerHTML = '<div class="sk-chase-dot svelte-8l84q3"></div> \n      <div class="sk-chase-dot svelte-8l84q3"></div> \n      <div class="sk-chase-dot svelte-8l84q3"></div> \n      <div class="sk-chase-dot svelte-8l84q3"></div> \n      <div class="sk-chase-dot svelte-8l84q3"></div> \n      <div class="sk-chase-dot svelte-8l84q3"></div>', 
+                t5 = space(), if_block && if_block.c(), attr(div6, "class", "sk-chase svelte-8l84q3"), 
+                attr(div7, "class", "loading-bg svelte-8l84q3");
             },
             m(target, anchor) {
-                insert(target, div7, anchor), append(div7, div6), append(div7, t5), if_block && if_block.m(div7, null),
+                insert(target, div7, anchor), append(div7, div6), append(div7, t5), if_block && if_block.m(div7, null), 
                 ctx[5](div7);
             },
             p(ctx, dirty) {
-                ctx[2] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block_1(ctx),
+                ctx[2] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block_1(ctx), 
                 if_block.c(), if_block.m(div7, null)) : if_block && (if_block.d(1), if_block = null);
             },
             d(detaching) {
@@ -325,7 +327,7 @@
         let div, t;
         return {
             c() {
-                div = element("div"), t = text(ctx[2]), attr(div, "class", "loading-content svelte-julqje");
+                div = element("div"), t = text(ctx[2]), attr(div, "class", "loading-content svelte-8l84q3");
             },
             m(target, anchor) {
                 insert(target, div, anchor), append(div, t);
@@ -350,8 +352,8 @@
                 if_block && if_block.m(target, anchor), insert(target, if_block_anchor, anchor);
             },
             p(ctx, [dirty]) {
-                ctx[1] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block(ctx), if_block.c(),
-                if_block.m(if_block_anchor.parentNode, if_block_anchor)) : if_block && (if_block.d(1),
+                ctx[1] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block(ctx), if_block.c(), 
+                if_block.m(if_block_anchor.parentNode, if_block_anchor)) : if_block && (if_block.d(1), 
                 if_block = null);
             },
             i: noop,
@@ -364,7 +366,7 @@
     function instance($$self, $$props, $$invalidate) {
         let loading, content, visiable = !1, closeTimer = null;
         return [ loading, visiable, content, function show({title: title, duration: duration = 0}) {
-            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0),
+            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0), 
             0 != duration && (closeTimer = setTimeout((() => {
                 $$invalidate(1, visiable = !1), closeTimer = null;
             }), duration));
@@ -376,7 +378,7 @@
             }));
         } ];
     }
-    styleInject('.loading-bg.svelte-julqje{align-items:center;background:rgba(0,0,0,.6);bottom:0;display:flex;flex-direction:column;justify-content:center;left:0;position:fixed;right:0;top:0;z-index:99999}.loading-content.svelte-julqje{color:#fff;font-size:16px;margin-top:10px}.sk-chase.svelte-julqje{animation:svelte-julqje-sk-chase 2.5s linear infinite both;height:40px;width:40px}.sk-chase-dot.svelte-julqje{animation:svelte-julqje-sk-chase-dot 2s ease-in-out infinite both;height:100%;left:0;position:absolute;top:0;width:100%}.sk-chase-dot.svelte-julqje:before{animation:svelte-julqje-sk-chase-dot-before 2s ease-in-out infinite both;background-color:#fff;border-radius:100%;content:"";display:block;height:25%;width:25%}.sk-chase-dot.svelte-julqje:first-child{animation-delay:-1.1s}.sk-chase-dot.svelte-julqje:nth-child(2){animation-delay:-1s}.sk-chase-dot.svelte-julqje:nth-child(3){animation-delay:-.9s}.sk-chase-dot.svelte-julqje:nth-child(4){animation-delay:-.8s}.sk-chase-dot.svelte-julqje:nth-child(5){animation-delay:-.7s}.sk-chase-dot.svelte-julqje:nth-child(6){animation-delay:-.6s}.sk-chase-dot.svelte-julqje:first-child:before{animation-delay:-1.1s}.sk-chase-dot.svelte-julqje:nth-child(2):before{animation-delay:-1s}.sk-chase-dot.svelte-julqje:nth-child(3):before{animation-delay:-.9s}.sk-chase-dot.svelte-julqje:nth-child(4):before{animation-delay:-.8s}.sk-chase-dot.svelte-julqje:nth-child(5):before{animation-delay:-.7s}.sk-chase-dot.svelte-julqje:nth-child(6):before{animation-delay:-.6s}@keyframes svelte-julqje-sk-chase{to{transform:rotate(1turn)}}@keyframes svelte-julqje-sk-chase-dot{80%,to{transform:rotate(1turn)}}@keyframes svelte-julqje-sk-chase-dot-before{50%{transform:scale(.4)}0%,to{transform:scale(1)}}');
+    styleInject('.loading-bg.svelte-8l84q3{position:fixed;z-index:99999;background:rgba(0,0,0,.6);top:0;right:0;bottom:0;left:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.loading-content.svelte-8l84q3{font-size:16px;margin-top:20px;color:#fff}.sk-chase.svelte-8l84q3{width:40px;height:40px;animation:svelte-8l84q3-sk-chase 2.5s linear infinite both}.sk-chase-dot.svelte-8l84q3{width:100%;height:100%;position:absolute;left:0;top:0;animation:svelte-8l84q3-sk-chase-dot 2s ease-in-out infinite both}.sk-chase-dot.svelte-8l84q3:before{content:"";display:block;width:25%;height:25%;background-color:#fff;border-radius:100%;animation:svelte-8l84q3-sk-chase-dot-before 2s ease-in-out infinite both}.sk-chase-dot.svelte-8l84q3:first-child{animation-delay:-1.1s}.sk-chase-dot.svelte-8l84q3:nth-child(2){animation-delay:-1s}.sk-chase-dot.svelte-8l84q3:nth-child(3){animation-delay:-.9s}.sk-chase-dot.svelte-8l84q3:nth-child(4){animation-delay:-.8s}.sk-chase-dot.svelte-8l84q3:nth-child(5){animation-delay:-.7s}.sk-chase-dot.svelte-8l84q3:nth-child(6){animation-delay:-.6s}.sk-chase-dot.svelte-8l84q3:first-child:before{animation-delay:-1.1s}.sk-chase-dot.svelte-8l84q3:nth-child(2):before{animation-delay:-1s}.sk-chase-dot.svelte-8l84q3:nth-child(3):before{animation-delay:-.9s}.sk-chase-dot.svelte-8l84q3:nth-child(4):before{animation-delay:-.8s}.sk-chase-dot.svelte-8l84q3:nth-child(5):before{animation-delay:-.7s}.sk-chase-dot.svelte-8l84q3:nth-child(6):before{animation-delay:-.6s}@keyframes svelte-8l84q3-sk-chase{to{transform:rotate(1turn)}}@keyframes svelte-8l84q3-sk-chase-dot{80%,to{transform:rotate(1turn)}}@keyframes svelte-8l84q3-sk-chase-dot-before{50%{transform:scale(.4)}0%,to{transform:scale(1)}}');
     class Loading extends SvelteComponent {
         constructor(options) {
             super(), init(this, options, instance, create_fragment, safe_not_equal, {
@@ -391,7 +393,7 @@
             return this.$$.ctx[4];
         }
     }
-    const loading = UseSingleton((() => {
+    const loading = useSingleton((() => {
         const loadingEl = new Loading({
             target: document.body,
             props: {
@@ -417,11 +419,11 @@
             let exportBtn = null;
             const btns = document.querySelectorAll("[class*=export_panel--standalonePanel] button");
             for (let btn of btns) "Export" === btn.querySelector("span")?.innerText && (exportBtn = btn);
-            exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")),
-            !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")),
+            exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")), 
+            !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")), 
             exportBtn.parentElement.parentElement.insertBefore(base64BtnWrapper, exportBtn.parentElement.nextSibling));
         }
-        base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", exportAndupload),
+        base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", exportAndupload), 
         base64BtnWrapper.appendChild(base64Btn), function addExportTabEventListener() {
             const node = document.querySelector("[data-label=export i]");
             node ? node.addEventListener("click", (function() {
@@ -486,7 +488,7 @@
                 }), data = new FormData;
                 data.append("file", blob, (new Date).getTime() + ".png");
                 const uploadUrl = GM_getValue("UPLOAD_URL", "");
-                if (!uploadUrl) return void window.open("https://nocoding.xyz/figma-image-upload/setting.html");
+                if (!uploadUrl) return void window.open("http://blog.sodion.net/figma-image-upload/setting.html");
                 !function copyContent(text) {
                     if (void 0 !== navigator.clipboard) navigator.clipboard.writeText(text).then((function() {
                         parent.postMessage({
