@@ -8,7 +8,7 @@
 
 ## Example
 
-打开 [配置地址](https://nocoding.xyz/figma-image-upload/setting.html) 配置上传地址
+打开 [配置地址](http://blog.sodion.net/figma-image-upload/setting.html) 配置上传地址
 
 ![示例图](https://i.loli.net/2021/09/26/MhER6mvdbNAsQ1V.png)
 

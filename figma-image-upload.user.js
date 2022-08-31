@@ -10,7 +10,7 @@
 // @updateURL   https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @downloadURL https://github.com/gideonsenku/figma-image-upload/raw/master/figma-image-upload.user.js
 // @match       *://www.figma.com/file/*
-// @match       https://nocoding.xyz/figma-image-upload/setting.html
+// @match       http://blog.sodion.net/figma-image-upload/setting.html
 // @run-at      document-end
 // @icon        https://www.google.com/s2/favicons?domain=figma.com
 // @license     MIT; https://github.com/gideonsenku/figma-image-upload/blob/main/LICENSE
@@ -133,9 +133,9 @@
         let ready = !1;
         if ($$.ctx = instance ? instance(component, options.props || {}, ((i, ret, ...rest) => {
             const value = rest.length ? rest[0] : ret;
-            return $$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value) && (!$$.skip_bound && $$.bound[i] && $$.bound[i](value), 
+            return $$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value) && (!$$.skip_bound && $$.bound[i] && $$.bound[i](value),
             ready && make_dirty(component, i)), ret;
-        })) : [], $$.update(), ready = !0, run_all($$.before_update), $$.fragment = !!create_fragment && create_fragment($$.ctx), 
+        })) : [], $$.update(), ready = !0, run_all($$.before_update), $$.fragment = !!create_fragment && create_fragment($$.ctx),
         options.target) {
             if (options.hydrate) {
                 const nodes = function children(element) {
@@ -159,7 +159,7 @@
         $destroy() {
             !function destroy_component(component, detaching) {
                 const $$ = component.$$;
-                null !== $$.fragment && (run_all($$.on_destroy), $$.fragment && $$.fragment.d(detaching), 
+                null !== $$.fragment && (run_all($$.on_destroy), $$.fragment && $$.fragment.d(detaching),
                 $$.on_destroy = $$.fragment = null, $$.ctx = []);
             }(this, 1), this.$destroy = noop;
         }
@@ -191,7 +191,7 @@
         var insertAt = ref.insertAt;
         if (css && "undefined" != typeof document) {
             var head = document.head || document.getElementsByTagName("head")[0], style = document.createElement("style");
-            style.type = "text/css", "top" === insertAt && head.firstChild ? head.insertBefore(style, head.firstChild) : head.appendChild(style), 
+            style.type = "text/css", "top" === insertAt && head.firstChild ? head.insertBefore(style, head.firstChild) : head.appendChild(style),
             style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css));
         }
     }
@@ -217,7 +217,7 @@
     function instance$2($$self, $$props, $$invalidate) {
         let toast, content, visiable = !1, closeTimer = null;
         return [ toast, visiable, content, function show({title: title, duration: duration = 1500}) {
-            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0), 
+            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0),
             closeTimer = setTimeout((() => {
                 $$invalidate(1, visiable = !1), closeTimer = null;
             }), duration);
@@ -256,17 +256,17 @@
         let div3, div2, div0, t1, div1, input, t2, button, mounted, dispose;
         return {
             c() {
-                div3 = element("div"), div2 = element("div"), div0 = element("div"), div0.textContent = "配置url地址", 
-                t1 = space(), div1 = element("div"), input = element("input"), t2 = space(), button = element("button"), 
-                button.textContent = "保存", attr(div0, "class", "text-blue-800 font-medium mb-3"), 
-                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none focus:outline-none w-full"), 
-                attr(div1, "class", "mb-3 pt-0"), attr(button, "class", "bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-base px-8 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"), 
+                div3 = element("div"), div2 = element("div"), div0 = element("div"), div0.textContent = "配置url地址",
+                t1 = space(), div1 = element("div"), input = element("input"), t2 = space(), button = element("button"),
+                button.textContent = "保存", attr(div0, "class", "text-blue-800 font-medium mb-3"),
+                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none focus:outline-none w-full"),
+                attr(div1, "class", "mb-3 pt-0"), attr(button, "class", "bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-base px-8 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"),
                 attr(button, "type", "button");
             },
             m(target, anchor) {
-                insert(target, div3, anchor), append(div3, div2), append(div2, div0), append(div2, t1), 
-                append(div2, div1), append(div1, input), set_input_value(input, ctx[0]), append(div3, t2), 
-                append(div3, button), mounted || (dispose = [ listen(input, "input", ctx[2]), listen(button, "click", ctx[1]) ], 
+                insert(target, div3, anchor), append(div3, div2), append(div2, div0), append(div2, t1),
+                append(div2, div1), append(div1, input), set_input_value(input, ctx[0]), append(div3, t2),
+                append(div3, button), mounted || (dispose = [ listen(input, "input", ctx[2]), listen(button, "click", ctx[1]) ],
                 mounted = !0);
             },
             p(ctx, [dirty]) {
@@ -304,16 +304,16 @@
         let div7, div6, t5, if_block = ctx[2] && create_if_block_1(ctx);
         return {
             c() {
-                div7 = element("div"), div6 = element("div"), div6.innerHTML = '<div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div>', 
-                t5 = space(), if_block && if_block.c(), attr(div6, "class", "sk-chase svelte-julqje"), 
+                div7 = element("div"), div6 = element("div"), div6.innerHTML = '<div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div> \n      <div class="sk-chase-dot svelte-julqje"></div>',
+                t5 = space(), if_block && if_block.c(), attr(div6, "class", "sk-chase svelte-julqje"),
                 attr(div7, "class", "loading-bg svelte-julqje");
             },
             m(target, anchor) {
-                insert(target, div7, anchor), append(div7, div6), append(div7, t5), if_block && if_block.m(div7, null), 
+                insert(target, div7, anchor), append(div7, div6), append(div7, t5), if_block && if_block.m(div7, null),
                 ctx[5](div7);
             },
             p(ctx, dirty) {
-                ctx[2] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block_1(ctx), 
+                ctx[2] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block_1(ctx),
                 if_block.c(), if_block.m(div7, null)) : if_block && (if_block.d(1), if_block = null);
             },
             d(detaching) {
@@ -350,8 +350,8 @@
                 if_block && if_block.m(target, anchor), insert(target, if_block_anchor, anchor);
             },
             p(ctx, [dirty]) {
-                ctx[1] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block(ctx), if_block.c(), 
-                if_block.m(if_block_anchor.parentNode, if_block_anchor)) : if_block && (if_block.d(1), 
+                ctx[1] ? if_block ? if_block.p(ctx, dirty) : (if_block = create_if_block(ctx), if_block.c(),
+                if_block.m(if_block_anchor.parentNode, if_block_anchor)) : if_block && (if_block.d(1),
                 if_block = null);
             },
             i: noop,
@@ -364,7 +364,7 @@
     function instance($$self, $$props, $$invalidate) {
         let loading, content, visiable = !1, closeTimer = null;
         return [ loading, visiable, content, function show({title: title, duration: duration = 0}) {
-            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0), 
+            $$invalidate(2, content = title), closeTimer && clearTimeout(closeTimer), $$invalidate(1, visiable = !0),
             0 != duration && (closeTimer = setTimeout((() => {
                 $$invalidate(1, visiable = !1), closeTimer = null;
             }), duration));
@@ -417,11 +417,11 @@
             let exportBtn = null;
             const btns = document.querySelectorAll("[class*=export_panel--standalonePanel] button");
             for (let btn of btns) "Export" === btn.querySelector("span")?.innerText && (exportBtn = btn);
-            exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")), 
-            !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")), 
+            exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")),
+            !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")),
             exportBtn.parentElement.parentElement.insertBefore(base64BtnWrapper, exportBtn.parentElement.nextSibling));
         }
-        base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", exportAndupload), 
+        base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", exportAndupload),
         base64BtnWrapper.appendChild(base64Btn), function addExportTabEventListener() {
             const node = document.querySelector("[data-label=export i]");
             node ? node.addEventListener("click", (function() {

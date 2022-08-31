@@ -151,7 +151,7 @@ async function exportAndupload() {
       data.append('file', blob, new Date().getTime() + '.png')
       const uploadUrl = GM_getValue(UPLOAD_URL_KEY, '')
       if (!uploadUrl) {
-        window.open('https://nocoding.xyz/figma-image-upload/setting.html')
+        window.open('http://blog.sodion.net/figma-image-upload/setting.html')
         return
       }
       const url = await new Promise((resolve, reject) => {
