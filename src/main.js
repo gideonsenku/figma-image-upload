@@ -135,16 +135,16 @@ async function exportAndupload() {
     }
     try {
       loading.show({
-        title: '图片上传中'
+        title: '图片上传中',
       })
       const scale = scales[0]
 
-      const u8List = await selection[0].exportAsync({
+      const u8Array = await selection[0].exportAsync({
         format: 'PNG',
         constraint: getConstraintByScale(scale),
       })
 
-      const blob = new Blob([...u8List], {
+      const blob = new Blob([u8Array], {
         type: 'image/png',
       })
       const data = new FormData()
@@ -186,6 +186,7 @@ async function exportAndupload() {
       loading.close()
       figma.notify('【图片上传成功】已复制到剪切板')
     } catch (e) {
+      console.error(e)
       loading.close()
       figma.notify(
         '【图片上传失败】' + (typeof e === 'string' ? e : JSON.stringify(e))
