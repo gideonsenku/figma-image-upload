@@ -32,7 +32,7 @@ const figmaImageUpload = () => {
   // 给+号按钮添加监听
   function addAddBtnEventListener() {
     document
-      .querySelectorAll('span[aria-label^=Add]')[0]
+      .querySelectorAll('span[aria-label=Add]')[0]
       ?.addEventListener('click', function () {
         setTimeout(() => {
           insertBase64Btn()
