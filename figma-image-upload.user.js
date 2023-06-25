@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.2.1
+// @version     0.3.0
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -416,16 +416,16 @@
         if (!/^https:\/\/www\.figma.com/.test(window.location.href)) return;
         const base64BtnWrapper = document.createElement("div"), base64Btn = document.createElement("button");
         function insertBase64Btn() {
-            let exportBtn = null;
-            const btns = document.querySelectorAll("[class*=export_panel--standalonePanel] button");
-            for (let btn of btns) "Export" === btn.querySelector("span")?.innerText && (exportBtn = btn);
+            let exportBtn = null, btns = document.querySelectorAll("[class*=export_panel--standalonePanel] button");
+            btns?.length || (btns = document.querySelectorAll("[id*=export-inspection-panel] button"));
+            for (let btn of btns) /Export/.test(btn.querySelector("span")?.innerText) && (exportBtn = btn);
             exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")), 
             !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")), 
             exportBtn.parentElement.parentElement.insertBefore(base64BtnWrapper, exportBtn.parentElement.nextSibling));
         }
         base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", exportAndupload), 
         base64BtnWrapper.appendChild(base64Btn), function addExportTabEventListener() {
-            const node = document.querySelector("[data-label=export i]");
+            const node = document.querySelector("[data-label=export i]") || document.querySelector("[class*=draggable_list--panelTitle]");
             node ? node.addEventListener("click", (function() {
                 setTimeout((() => {
                     insertBase64Btn(), function addAddBtnEventListener() {

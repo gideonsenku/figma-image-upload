@@ -14,7 +14,7 @@ const figmaImageUpload = () => {
 
   // 监听export 面板点击监听
   function addExportTabEventListener() {
-    const node = document.querySelector('[data-label=export i]')
+    const node = document.querySelector('[data-label=export i]') || document.querySelector('[class*=draggable_list--panelTitle]')
     if (node) {
       node.addEventListener('click', function () {
         setTimeout(() => {
@@ -42,11 +42,13 @@ const figmaImageUpload = () => {
 
   function insertBase64Btn() {
     let exportBtn = null
-    const btns = document.querySelectorAll(
+    let btns = document.querySelectorAll(
       '[class*=export_panel--standalonePanel] button'
     )
+    btns?.length ? btns : btns = document.querySelectorAll('[id*=export-inspection-panel] button')
+
     for (let btn of btns) {
-      if (btn.querySelector('span')?.innerText === 'Export') {
+      if ((/Export/).test(btn.querySelector('span')?.innerText)) {
         exportBtn = btn
       }
     }
