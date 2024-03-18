@@ -32,7 +32,7 @@ const figmaImageUpload = () => {
   // 给+号按钮添加监听
   function addAddBtnEventListener() {
     document
-      .querySelectorAll('span[aria-label=Add]')[0]
+      .querySelectorAll('button[aria-label=Add]')[0]
       ?.addEventListener('click', function () {
         setTimeout(() => {
           insertBase64Btn()
@@ -42,10 +42,7 @@ const figmaImageUpload = () => {
 
   function insertBase64Btn() {
     let exportBtn = null
-    let btns = document.querySelectorAll(
-      '[class*=export_panel--standalonePanel] button'
-    )
-    btns?.length ? btns : btns = document.querySelectorAll('[id*=export-inspection-panel] button')
+    const btns = document.querySelectorAll('[id*=export-inspection-panel] button')
 
     for (let btn of btns) {
       if ((/Export/).test(btn.querySelector('span')?.innerText)) {

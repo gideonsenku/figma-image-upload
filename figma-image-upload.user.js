@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.3.0
+// @version     0.3.1
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -416,8 +416,8 @@
         if (!/^https:\/\/www\.figma.com/.test(window.location.href)) return;
         const base64BtnWrapper = document.createElement("div"), base64Btn = document.createElement("button");
         function insertBase64Btn() {
-            let exportBtn = null, btns = document.querySelectorAll("[class*=export_panel--standalonePanel] button");
-            btns?.length || (btns = document.querySelectorAll("[id*=export-inspection-panel] button"));
+            let exportBtn = null;
+            const btns = document.querySelectorAll("[id*=export-inspection-panel] button");
             for (let btn of btns) /Export/.test(btn.querySelector("span")?.innerText) && (exportBtn = btn);
             exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")), 
             !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")), 
@@ -429,7 +429,7 @@
             node ? node.addEventListener("click", (function() {
                 setTimeout((() => {
                     insertBase64Btn(), function addAddBtnEventListener() {
-                        document.querySelectorAll("span[aria-label=Add]")[0]?.addEventListener("click", (function() {
+                        document.querySelectorAll("button[aria-label=Add]")[0]?.addEventListener("click", (function() {
                             setTimeout((() => {
                                 insertBase64Btn();
                             }), 100);
