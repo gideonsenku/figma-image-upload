@@ -3,6 +3,7 @@ import { UPLOAD_URL_KEY } from './constants/storageKey'
 import SettingPanel from './components/Setting/SettingPanel.svelte'
 import loading from './components/Loading/index'
 import { copyContent } from './utils/clipboard'
+import { set } from 'lodash-es'
 
 const figmaImageUpload = () => {
   if (!/^https:\/\/www\.figma.com/.test(window.location.href)) return
@@ -115,6 +116,12 @@ function getConstraintByScale(scale) {
     }
   }
 }
+// 定义一个等待函数
+function wait(seconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, seconds * 100)
+  })
+}
 
 async function exportAndupload() {
   console.log('exportAndupload clicked')
@@ -128,8 +135,9 @@ async function exportAndupload() {
   let scales = Array.from(new Set(scaleInputs.map((ele) => ele.value)))
 
   if (!scales.length) {
-    alert('未选择导出尺寸, 默认导出3x')
+    figma.notify('未选择导出尺寸, 默认导出3x')
     scales = ['3x']
+    await wait(3)
   }
 
   if (scales.length) {

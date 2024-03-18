@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.3.2
+// @version     0.3.3
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -474,7 +474,11 @@
         console.log("exportAndupload clicked");
         const scaleInputs = Array.apply(null, document.querySelectorAll('input[spellcheck="false"][autocomplete="new-password"][class^=raw_components--textInput]'));
         let scales = Array.from(new Set(scaleInputs.map((ele => ele.value))));
-        if (scales.length || (alert("未选择导出尺寸, 默认导出3x"), scales = [ "3x" ]), scales.length) {
+        if (scales.length || (figma.notify("未选择导出尺寸, 默认导出3x"), scales = [ "3x" ], await function wait(seconds) {
+            return new Promise((resolve => {
+                setTimeout(resolve, 100 * seconds);
+            }));
+        }(3)), scales.length) {
             const {selection: selection} = figma.currentPage;
             if (!selection[0]) return void figma.notify("请选择要处理的节点");
             try {
