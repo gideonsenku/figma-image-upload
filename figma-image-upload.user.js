@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Figma Image Upload
 // @namespace   https://github.com/gideonsenku
-// @version     0.3.1
+// @version     0.3.2
 // @description Figma Image Upload图片上传工具
 // @encoding    utf-8
 // @author      gideonsenku
@@ -76,26 +76,24 @@
     function add_render_callback(fn) {
         render_callbacks.push(fn);
     }
-    let flushing = !1;
     const seen_callbacks = new Set;
+    let flushidx = 0;
     function flush() {
-        if (!flushing) {
-            flushing = !0;
-            do {
-                for (let i = 0; i < dirty_components.length; i += 1) {
-                    const component = dirty_components[i];
-                    set_current_component(component), update(component.$$);
-                }
-                for (set_current_component(null), dirty_components.length = 0; binding_callbacks.length; ) binding_callbacks.pop()();
-                for (let i = 0; i < render_callbacks.length; i += 1) {
-                    const callback = render_callbacks[i];
-                    seen_callbacks.has(callback) || (seen_callbacks.add(callback), callback());
-                }
-                render_callbacks.length = 0;
-            } while (dirty_components.length);
-            for (;flush_callbacks.length; ) flush_callbacks.pop()();
-            update_scheduled = !1, flushing = !1, seen_callbacks.clear();
-        }
+        const saved_component = current_component;
+        do {
+            for (;flushidx < dirty_components.length; ) {
+                const component = dirty_components[flushidx];
+                flushidx++, set_current_component(component), update(component.$$);
+            }
+            for (set_current_component(null), dirty_components.length = 0, flushidx = 0; binding_callbacks.length; ) binding_callbacks.pop()();
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                seen_callbacks.has(callback) || (seen_callbacks.add(callback), callback());
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        for (;flush_callbacks.length; ) flush_callbacks.pop()();
+        update_scheduled = !1, seen_callbacks.clear(), set_current_component(saved_component);
     }
     function update($$) {
         if (null !== $$.fragment) {
@@ -125,7 +123,7 @@
             on_disconnect: [],
             before_update: [],
             after_update: [],
-            context: new Map(parent_component ? parent_component.$$.context : options.context || []),
+            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
             callbacks: blank_object(),
             dirty: dirty,
             skip_bound: !1,
@@ -178,7 +176,7 @@
             }($$props) && (this.$$.skip_bound = !0, this.$$set($$props), this.$$.skip_bound = !1);
         }
     }
-    const useSingleton = function(createInstance, {withKey: withKey = !1, immediate: immediate = !1} = {}) {
+    var UseSingleton = function(createInstance, {withKey: withKey = !1, immediate: immediate = !1} = {}) {
         const UNDEFINED_INSTANCE = {};
         let _key, _instance = UNDEFINED_INSTANCE;
         function getSingleton(key) {
@@ -229,7 +227,7 @@
             }));
         } ];
     }
-    styleInject(".toast.svelte-1hd7ahf{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:4px;background-color:rgba(0,0,0,.8);padding:12px 24px;max-width:200px;color:#eee;font-size:16px;z-index:9999999}.toast--hide.svelte-1hd7ahf{z-index:-1;visibility:hidden}");
+    styleInject(".toast.svelte-1hd7ahf{background-color:rgba(0,0,0,.8);border-radius:4px;color:#eee;font-size:16px;left:50%;max-width:200px;padding:12px 24px;position:fixed;top:50%;transform:translate(-50%,-50%);z-index:9999999}.toast--hide.svelte-1hd7ahf{visibility:hidden;z-index:-1}");
     class Toast extends SvelteComponent {
         constructor(options) {
             super(), init(this, options, instance$2, create_fragment$2, safe_not_equal, {
@@ -240,7 +238,7 @@
             return this.$$.ctx[3];
         }
     }
-    const toast = useSingleton((() => {
+    const toast = UseSingleton((() => {
         const toastEl = new Toast({
             target: document.body,
             props: {
@@ -261,7 +259,7 @@
                 div3 = element("div"), div2 = element("div"), div0 = element("div"), div0.textContent = "配置url地址", 
                 t1 = space(), div1 = element("div"), input = element("input"), t2 = space(), button = element("button"), 
                 button.textContent = "保存", attr(div0, "class", "text-blue-800 font-medium mb-3"), 
-                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none\n      focus:outline-none w-full"), 
+                attr(input, "type", "text"), attr(input, "placeholder", "url"), attr(input, "class", "px-3 py-4 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base border-0 shadow outline-none focus:outline-none w-full"), 
                 attr(div1, "class", "mb-3 pt-0"), attr(button, "class", "bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-base px-8 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"), 
                 attr(button, "type", "button");
             },
@@ -378,7 +376,7 @@
             }));
         } ];
     }
-    styleInject('.loading-bg.svelte-8l84q3{position:fixed;z-index:99999;background:rgba(0,0,0,.6);top:0;right:0;bottom:0;left:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.loading-content.svelte-8l84q3{font-size:16px;margin-top:20px;color:#fff}.sk-chase.svelte-8l84q3{width:40px;height:40px;animation:svelte-8l84q3-sk-chase 2.5s linear infinite both}.sk-chase-dot.svelte-8l84q3{width:100%;height:100%;position:absolute;left:0;top:0;animation:svelte-8l84q3-sk-chase-dot 2s ease-in-out infinite both}.sk-chase-dot.svelte-8l84q3:before{content:"";display:block;width:25%;height:25%;background-color:#fff;border-radius:100%;animation:svelte-8l84q3-sk-chase-dot-before 2s ease-in-out infinite both}.sk-chase-dot.svelte-8l84q3:first-child{animation-delay:-1.1s}.sk-chase-dot.svelte-8l84q3:nth-child(2){animation-delay:-1s}.sk-chase-dot.svelte-8l84q3:nth-child(3){animation-delay:-.9s}.sk-chase-dot.svelte-8l84q3:nth-child(4){animation-delay:-.8s}.sk-chase-dot.svelte-8l84q3:nth-child(5){animation-delay:-.7s}.sk-chase-dot.svelte-8l84q3:nth-child(6){animation-delay:-.6s}.sk-chase-dot.svelte-8l84q3:first-child:before{animation-delay:-1.1s}.sk-chase-dot.svelte-8l84q3:nth-child(2):before{animation-delay:-1s}.sk-chase-dot.svelte-8l84q3:nth-child(3):before{animation-delay:-.9s}.sk-chase-dot.svelte-8l84q3:nth-child(4):before{animation-delay:-.8s}.sk-chase-dot.svelte-8l84q3:nth-child(5):before{animation-delay:-.7s}.sk-chase-dot.svelte-8l84q3:nth-child(6):before{animation-delay:-.6s}@keyframes svelte-8l84q3-sk-chase{to{transform:rotate(1turn)}}@keyframes svelte-8l84q3-sk-chase-dot{80%,to{transform:rotate(1turn)}}@keyframes svelte-8l84q3-sk-chase-dot-before{50%{transform:scale(.4)}0%,to{transform:scale(1)}}');
+    styleInject('.loading-bg.svelte-8l84q3{align-items:center;background:rgba(0,0,0,.6);bottom:0;display:flex;flex-direction:column;justify-content:center;left:0;position:fixed;right:0;top:0;z-index:99999}.loading-content.svelte-8l84q3{color:#fff;font-size:16px;margin-top:20px}.sk-chase.svelte-8l84q3{animation:svelte-8l84q3-sk-chase 2.5s linear infinite both;height:40px;width:40px}.sk-chase-dot.svelte-8l84q3{animation:svelte-8l84q3-sk-chase-dot 2s ease-in-out infinite both;height:100%;left:0;position:absolute;top:0;width:100%}.sk-chase-dot.svelte-8l84q3:before{animation:svelte-8l84q3-sk-chase-dot-before 2s ease-in-out infinite both;background-color:#fff;border-radius:100%;content:"";display:block;height:25%;width:25%}.sk-chase-dot.svelte-8l84q3:first-child{animation-delay:-1.1s}.sk-chase-dot.svelte-8l84q3:nth-child(2){animation-delay:-1s}.sk-chase-dot.svelte-8l84q3:nth-child(3){animation-delay:-.9s}.sk-chase-dot.svelte-8l84q3:nth-child(4){animation-delay:-.8s}.sk-chase-dot.svelte-8l84q3:nth-child(5){animation-delay:-.7s}.sk-chase-dot.svelte-8l84q3:nth-child(6){animation-delay:-.6s}.sk-chase-dot.svelte-8l84q3:first-child:before{animation-delay:-1.1s}.sk-chase-dot.svelte-8l84q3:nth-child(2):before{animation-delay:-1s}.sk-chase-dot.svelte-8l84q3:nth-child(3):before{animation-delay:-.9s}.sk-chase-dot.svelte-8l84q3:nth-child(4):before{animation-delay:-.8s}.sk-chase-dot.svelte-8l84q3:nth-child(5):before{animation-delay:-.7s}.sk-chase-dot.svelte-8l84q3:nth-child(6):before{animation-delay:-.6s}@keyframes svelte-8l84q3-sk-chase{to{transform:rotate(1turn)}}@keyframes svelte-8l84q3-sk-chase-dot{80%,to{transform:rotate(1turn)}}@keyframes svelte-8l84q3-sk-chase-dot-before{50%{transform:scale(.4)}0%,to{transform:scale(1)}}');
     class Loading extends SvelteComponent {
         constructor(options) {
             super(), init(this, options, instance, create_fragment, safe_not_equal, {
@@ -393,7 +391,7 @@
             return this.$$.ctx[4];
         }
     }
-    const loading = useSingleton((() => {
+    const loading = UseSingleton((() => {
         const loadingEl = new Loading({
             target: document.body,
             props: {
@@ -414,17 +412,18 @@
     }))();
     const figmaImageUpload = () => {
         if (!/^https:\/\/www\.figma.com/.test(window.location.href)) return;
-        const base64BtnWrapper = document.createElement("div"), base64Btn = document.createElement("button");
+        const divElement = document.createElement("div");
+        divElement.className = "button_row--fplButtonRow--nFW30";
+        const buttonElement = document.createElement("button");
+        buttonElement.className = "button-reset-module--buttonReset--AdW9- button-module--button--f8I-H utilities--bodyMedium--AOpj3 button-module--secondary--deyxA button-module--outlineStyle--eRuj0 button-module--wideSize--JMqnr", 
+        buttonElement.setAttribute("data-fpl-component", ""), buttonElement.addEventListener("click", exportAndupload);
+        const spanElement = document.createElement("span");
         function insertBase64Btn() {
-            let exportBtn = null;
-            const btns = document.querySelectorAll("[id*=export-inspection-panel] button");
-            for (let btn of btns) /Export/.test(btn.querySelector("span")?.innerText) && (exportBtn = btn);
-            exportBtn && (!base64Btn.className && base64Btn.classList.add(...exportBtn.className.split(" ")), 
-            !base64BtnWrapper.className && base64BtnWrapper.classList.add(...exportBtn.parentElement.className.split(" ")), 
-            exportBtn.parentElement.parentElement.insertBefore(base64BtnWrapper, exportBtn.parentElement.nextSibling));
+            const targetNode = document.querySelector("div[data-trackable-name=export_panel] div");
+            targetNode ? targetNode.appendChild(divElement) : console.error("Target node not found!");
         }
-        base64Btn.innerText = "上传OSS", base64Btn.addEventListener("click", exportAndupload), 
-        base64BtnWrapper.appendChild(base64Btn), function addExportTabEventListener() {
+        spanElement.className = "button-module--buttonText--Q9pu6", spanElement.innerHTML = '<span class="end_truncated_text--truncatedText--ycps2">OSS Upload</span>', 
+        buttonElement.appendChild(spanElement), divElement.appendChild(buttonElement), function addExportTabEventListener() {
             const node = document.querySelector("[data-label=export i]") || document.querySelector("[class*=draggable_list--panelTitle]");
             node ? node.addEventListener("click", (function() {
                 setTimeout((() => {
@@ -472,10 +471,12 @@
         } : void 0;
     }
     async function exportAndupload() {
-        const scaleInputs = Array.apply(null, document.querySelectorAll('input[spellcheck="false"][autocomplete="new-password"][class^=raw_components--textInput]')), scales = Array.from(new Set(scaleInputs.map((ele => ele.value))));
-        if (scales.length) {
+        console.log("exportAndupload clicked");
+        const scaleInputs = Array.apply(null, document.querySelectorAll('input[spellcheck="false"][autocomplete="new-password"][class^=raw_components--textInput]'));
+        let scales = Array.from(new Set(scaleInputs.map((ele => ele.value))));
+        if (scales.length || (alert("未选择导出尺寸, 默认导出3x"), scales = [ "3x" ]), scales.length) {
             const {selection: selection} = figma.currentPage;
-            if (!selection[0]) return void alert("请选择要处理的节点");
+            if (!selection[0]) return void figma.notify("请选择要处理的节点");
             try {
                 loading.show({
                     title: "图片上传中"

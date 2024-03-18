@@ -6,15 +6,27 @@ import { copyContent } from './utils/clipboard'
 
 const figmaImageUpload = () => {
   if (!/^https:\/\/www\.figma.com/.test(window.location.href)) return
-  const base64BtnWrapper = document.createElement('div')
-  const base64Btn = document.createElement('button')
-  base64Btn.innerText = '上传OSS'
-  base64Btn.addEventListener('click', exportAndupload)
-  base64BtnWrapper.appendChild(base64Btn)
+  // 创建包含按钮的 div 元素
+  const divElement = document.createElement('div')
+  divElement.className = 'button_row--fplButtonRow--nFW30'
+
+  const buttonElement = document.createElement('button')
+  buttonElement.className =
+    'button-reset-module--buttonReset--AdW9- button-module--button--f8I-H utilities--bodyMedium--AOpj3 button-module--secondary--deyxA button-module--outlineStyle--eRuj0 button-module--wideSize--JMqnr'
+  buttonElement.setAttribute('data-fpl-component', '')
+  buttonElement.addEventListener('click', exportAndupload)
+  const spanElement = document.createElement('span')
+  spanElement.className = 'button-module--buttonText--Q9pu6'
+  spanElement.innerHTML =
+    '<span class="end_truncated_text--truncatedText--ycps2">OSS Upload</span>'
+  buttonElement.appendChild(spanElement)
+  divElement.appendChild(buttonElement)
 
   // 监听export 面板点击监听
   function addExportTabEventListener() {
-    const node = document.querySelector('[data-label=export i]') || document.querySelector('[class*=draggable_list--panelTitle]')
+    const node =
+      document.querySelector('[data-label=export i]') ||
+      document.querySelector('[class*=draggable_list--panelTitle]')
     if (node) {
       node.addEventListener('click', function () {
         setTimeout(() => {
@@ -40,27 +52,15 @@ const figmaImageUpload = () => {
       })
   }
 
+  // 定义一个函数来创建并添加按钮元素到目标节点
   function insertBase64Btn() {
-    let exportBtn = null
-    const btns = document.querySelectorAll('[id*=export-inspection-panel] button')
-
-    for (let btn of btns) {
-      if ((/Export/).test(btn.querySelector('span')?.innerText)) {
-        exportBtn = btn
-      }
-    }
-
-    if (exportBtn) {
-      !base64Btn.className &&
-        base64Btn.classList.add(...exportBtn.className.split(' '))
-      !base64BtnWrapper.className &&
-        base64BtnWrapper.classList.add(
-          ...exportBtn.parentElement.className.split(' ')
-        )
-      exportBtn.parentElement.parentElement.insertBefore(
-        base64BtnWrapper,
-        exportBtn.parentElement.nextSibling
-      )
+    const targetNode = document.querySelector(
+      'div[data-trackable-name=export_panel] div'
+    )
+    if (targetNode) {
+      targetNode.appendChild(divElement)
+    } else {
+      console.error('Target node not found!')
     }
   }
 
@@ -117,6 +117,7 @@ function getConstraintByScale(scale) {
 }
 
 async function exportAndupload() {
+  console.log('exportAndupload clicked')
   // 缩放比选择器
   const scaleInputs = Array.apply(
     null,
@@ -124,12 +125,17 @@ async function exportAndupload() {
       'input[spellcheck="false"][autocomplete="new-password"][class^=raw_components--textInput]'
     )
   )
-  const scales = Array.from(new Set(scaleInputs.map((ele) => ele.value)))
+  let scales = Array.from(new Set(scaleInputs.map((ele) => ele.value)))
+
+  if (!scales.length) {
+    alert('未选择导出尺寸, 默认导出3x')
+    scales = ['3x']
+  }
 
   if (scales.length) {
     const { selection } = figma.currentPage
     if (!selection[0]) {
-      alert('请选择要处理的节点')
+      figma.notify('请选择要处理的节点')
       return
     }
     try {
